@@ -160,8 +160,8 @@ def add_args(parser):
     args2config.update({"reward_norm_std_mult": ["gflownet", "reward_norm_std_mult"]})
     parser.add_argument(
         "--reward_func",
-        default=1,
-        type=float,
+        default="power",
+        type=str,
         help="Function for rewards transformation: power or boltzmann",
     )
     args2config.update({"reward_func": ["gflownet", "reward_func"]})
@@ -839,7 +839,7 @@ class GFlowNetAgent:
                     self.opt.zero_grad()
                     all_losses.append([i.item() for i in losses])
             # Buffer
-            states_term, paths_term, rewards = self.unpack_terminal_states(batch)
+            states_term, paths_term, rewards = self.unpack_terminal_states(data) 
             proxy_vals = self.env.reward2proxy(rewards)
             self.buffer.add(states_term, paths_term, rewards, proxy_vals, it)
             self.buffer.add(

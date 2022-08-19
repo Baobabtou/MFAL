@@ -476,6 +476,15 @@ def add_args(parser):
         help="Multiplier of the standard deviation for the reward normalization",
     )
     args2config.update({"reward_norm_std_mult": ["gflownet", "reward_norm_std_mult"]})
+   
+    parser.add_argument(
+        "--reward_func",
+        default="power",
+        type=str,
+        help="Function for rewards transformation: power or boltzmann",
+    )
+    args2config.update({"reward_func": ["gflownet", "reward_func"]})
+   
     # Proxy model
     parser.add_argument(
         "--proxy_model_type",
@@ -642,9 +651,10 @@ def process_config(config):
     config.gflownet.func = config.dataset.oracle
     config.gflownet.test.score = config.gflownet.func.replace("nupack ", "")
     # Comet: same project for AL and GFlowNet
+    config.al.comet.project = config.comet_project
     if config.comet_project:
         config.gflownet.comet.project = config.comet_project
-        config.al.comet.project = config.comet_project
+        #config.al.comet.project = config.comet_project
     # sampling method - in case we forget to revert ensemble size
     if config.proxy.uncertainty_estimation == "dropout":
         config.proxy.ensemble_size = 1

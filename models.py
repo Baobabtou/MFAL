@@ -191,7 +191,9 @@ class modelNet():
         inputs = self.dataset_samples
         if self.config.device == 'cuda':
             inputs = torch.Tensor(inputs).cuda()
-
+        elif self.config.device == 'cpu':
+            inputs = torch.Tensor(inputs).cpu()
+        
         outputs = l2r(self.model(inputs))
         self.best_f = np.percentile(outputs, self.config.al.EI_max_percentile)
 
